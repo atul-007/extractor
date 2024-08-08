@@ -19,7 +19,7 @@ This project is a FastAPI application designed to extract invoice details from P
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-repo/pdf-invoice-extractor.git
+   git clone https://github.com/atul-007/extractor.git
    ```
 
 2. **Create a Virtual Environment**
