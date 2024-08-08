@@ -1,0 +1,33 @@
+# Python-specific
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+venv/
+env/
+*.env
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# FastAPI specific
+*.sqlite3
+*.db
+
+# Python package distribution files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Local environment files
+.env
