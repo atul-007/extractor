@@ -1,10 +1,10 @@
 # PDF Invoice Extractor
 
-This project is a FastAPI application designed to extract invoice details from PDF files using OpenAI's language model. The application processes PDF files, extracts text, and then uses an LLM to parse the invoice information into a structured format.
+This project is a FastAPI application designed to extract invoice details from PDF files using OpenAI's language model. The application processes PDF or Image files, extracts text, and then uses an LLM to parse the invoice information into a structured format.
 
 ## Features
 
-- **Upload PDF Invoices**: Upload a PDF file containing invoice data.
+- **Upload PDF Invoices**: Upload a PDF or Image[jpeg,png] file containing invoice data.
 - **Extract Invoice Details**: Extract customer details, products, and total amount from the invoice using GPT-4 (or other available models).
 - **API Endpoint**: A POST endpoint to handle PDF uploads and data extraction.
 
@@ -12,7 +12,7 @@ This project is a FastAPI application designed to extract invoice details from P
 
 - Python 3.8+
 - OpenAI API key
-- PDF files for testing
+- PDF or Image files for testing
 
 ## Installation
 

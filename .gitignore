@@ -6,7 +6,7 @@ __pycache__/
 venv/
 env/
 *.env
-
+/openai-env
 # IDE-specific files
 .vscode/
 .idea/

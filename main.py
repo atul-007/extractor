@@ -63,7 +63,7 @@ async def extract_invoice_data(text: str) -> InvoiceData:
     )
 
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-4o-mini",
         messages=[
             {"role": "user", "content": prompt}
         ]
