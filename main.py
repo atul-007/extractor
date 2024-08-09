@@ -1,8 +1,16 @@
+
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic import BaseModel
 import pdfplumber
+import pytesseract
+from PIL import Image
 import openai
 import os
+import io
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = FastAPI()
 
@@ -27,6 +35,11 @@ async def extract_text_from_pdf(file: UploadFile) -> str:
         text = ""
         for page in pdf.pages:
             text += page.extract_text()
+    return text
+
+async def extract_text_from_image(file: UploadFile) -> str:
+    image = Image.open(io.BytesIO(await file.read()))
+    text = pytesseract.image_to_string(image)
     return text
 
 async def extract_invoice_data(text: str) -> InvoiceData:
@@ -55,24 +68,24 @@ async def extract_invoice_data(text: str) -> InvoiceData:
             {"role": "user", "content": prompt}
         ]
     )
-    
-
 
     invoice_data = response['choices'][0]['message']['content']
     return InvoiceData.parse_raw(invoice_data)
 
 @app.post("/extract_invoice")
 async def extract_invoice(file: UploadFile = File(...)):
-    if file.content_type != "application/pdf":
-        raise HTTPException(status_code=400, detail="Invalid file format. Please upload a PDF file.")
-
-    try:
+    if file.content_type == "application/pdf":
         pdf_text = await extract_text_from_pdf(file)
         invoice_data = await extract_invoice_data(pdf_text)
         return invoice_data
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing PDF: {e}")
+    elif file.content_type in ["image/png", "image/jpeg"]:
+        image_text = await extract_text_from_image(file)
+        invoice_data = await extract_invoice_data(image_text)
+        return invoice_data
+
+    else:
+        raise HTTPException(status_code=400, detail="Invalid file format. Please upload a PDF or an image file.")
 
 if __name__ == "__main__":
     import uvicorn
