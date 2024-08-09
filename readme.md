@@ -1,91 +1,129 @@
-# PDF Invoice Extractor
 
-This project is a FastAPI application designed to extract invoice details from PDF files using OpenAI's language model. The application processes PDF or Image files, extracts text, and then uses an LLM to parse the invoice information into a structured format.
 
-## Features
+# Invoice Data Extraction API
 
-- **Upload PDF Invoices**: Upload a PDF or Image[jpeg,png] file containing invoice data.
-- **Extract Invoice Details**: Extract customer details, products, and total amount from the invoice using GPT-4 (or other available models).
-- **API Endpoint**: A POST endpoint to handle PDF uploads and data extraction.
+This FastAPI project allows you to extract invoice data from PDF and image files (JPEG/PNG) using the Gemini 1.5 model by Google and Tesseract OCR for text recognition from images.
 
-## Prerequisites
-
-- Python 3.8+
-- OpenAI API key
-- PDF or Image files for testing
+## Table of Contents
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [Running the Application](#running-the-application)
+- [API Endpoints](#api-endpoints)
+- [Example Usage](#example-usage)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
 
 ## Installation
 
-1. **Clone the Repository**
+### Prerequisites
+- Python 3.8 or higher
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) installed and added to your system's PATH
 
-   ```bash
-   git clone https://github.com/atul-007/extractor.git
-   ```
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/atul-007/extractor/tree/gemini
+```
 
-2. **Create a Virtual Environment**
+### Step 2: Install Python Dependencies
+Create a virtual environment and install the required Python packages:
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+pip install -r requirements.txt
+```
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
+### Step 3: Install Tesseract OCR
+- **Linux (Debian/Ubuntu)**:
+  ```bash
+  sudo apt-get install tesseract-ocr
+  ```
+- **macOS** (using Homebrew):
+  ```bash
+  brew install tesseract
+  ```
+- **Windows**:
+  - Download and install Tesseract from the [official repository](https://github.com/tesseract-ocr/tesseract).
 
-3. **Install Dependencies**
+### Step 4: Verify Tesseract Installation
+Ensure Tesseract is correctly installed by running:
+```bash
+tesseract --version
+```
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Environment Variables
 
-4. **Set Up Environment Variables**
+Create a `.env` file in the root directory of the project and add the following environment variable:
 
-   - Create a `.env` file in the root directory of the project.
-   - Add your OpenAI API key to the `.env` file:
+```bash
+GEMINI_API_KEY=your_gemini_api_key_here
+```
 
-     ```
-     OPENAI_API_KEY=your_openai_api_key_here
-     ```
+You can obtain the `GEMINI_API_KEY` by signing up for Google Generative AI services.
 
-5. **Install Additional Dependencies**
+## Running the Application
 
-   - Make sure to install `python-dotenv` for loading environment variables:
+To start the FastAPI server, run:
 
-     ```bash
-     pip install python-dotenv
-     ```
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8000
+```
 
-## Usage
+This will start the application on `http://0.0.0.0:8000`.
 
-1. **Run the FastAPI Application**
+## API Endpoints
 
-   ```bash
-   uvicorn main:app --reload
-   ```
+### `POST /extract_invoice`
+This endpoint allows you to upload a PDF or image file (JPEG/PNG) and extracts the invoice data.
 
-   The application will start and be available at `http://127.0.0.1:8000`.
+- **Request**:
+  - `file`: The PDF or image file (JPEG/PNG) containing the invoice.
 
-2. **Send a Request**
+- **Response**:
+  Returns the extracted invoice data in JSON format.
+  
+  ```json
+  {
+      "customer_name": "John Doe",
+      "customer_address": "123 Main St, City, Country",
+      "customer_email": "john.doe@example.com",
+      "products": [
+          {
+              "name": "Product 1",
+              "quantity": 2,
+              "price": 99.99
+          }
+      ],
+      "total_amount": 199.98
+  }
+  ```
 
-   - **Using Postman**:
-     - Method: POST
-     - URL: `http://127.0.0.1:8000/extract_invoice`
-     - Body: Form-data
-       - Key: `file`
-       - Type: File
-       - Value: Select your PDF file
+## Example Usage
 
-   - **Using cURL**:
+You can use `curl` or any API client like Postman to test the API:
 
-     ```bash
-     curl -X POST "http://127.0.0.1:8000/extract_invoice" \
-     -H "accept: application/json" \
-     -H "Content-Type: multipart/form-data" \
-     -F "file=@path_to_your_pdf_file.pdf"
-     ```
+```bash
+curl -X POST "http://localhost:8000/extract_invoice" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/path/to/your/invoice.pdf"
+```
 
-   - **Using HTML Form**:
+## Troubleshooting
 
-     Create a simple HTML form to upload a PDF and test the endpoint.
+### Tesseract Not Installed or Not Found
+If you encounter the error:
+
+```json
+{
+    "detail": "Error processing file: tesseract is not installed or it's not in your PATH. See README file for more information."
+}
+```
+
+Ensure that Tesseract is installed and accessible via the command line. Add the Tesseract installation path to your system's PATH environment variable if necessary.
+
+### Invalid API Key
+If the API returns an error related to the Gemini API, make sure your `GEMINI_API_KEY` is correct and that you have sufficient permissions.
 
 
 
 ---
-
