@@ -1,4 +1,4 @@
-# PDF Invoice Extractor
+# PDF Invoice Extractor(This github repository consists of two braches one contains solution using openai'a APIS and the other using Gemini
 
 This project is a FastAPI application designed to extract invoice details from PDF files using OpenAI's language model. The application processes PDF or Image files, extracts text, and then uses an LLM to parse the invoice information into a structured format.
 
